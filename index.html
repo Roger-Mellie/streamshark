@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notice Board</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #f4f4f4; }
+        .login-container { background: white; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); }
+        #noticeBoard { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    
+    <div class="login-container">
+        <h2>Streamshark Login</h2>
+        <input type="text" id="username" placeholder="Enter Username"><br><br>
+        <input type="password" id="password" placeholder="Enter Password">
+        <input type="checkbox" onclick="togglePassword()"> Show Password<br><br>
+        <button onclick="login()">Login</button>
+        <p id="loginError" style="color: red;"></p>
+    </div>
+
+    <div id="noticeBoard">
+        
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        let messages = [];
+        let currentUser = "";
+
+        async function fetchMessages() {
+            const response = await fetch('messages.json');
+            messages = await response.json();
+            displayMessages();
+        }
+
+        function displayMessages() {
+            document.getElementById('messages').innerHTML = messages.map(m => `<p>${m}</p>`).join('');
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            if (username === "admin001" && password === "@ss-nr978037B") {
+                currentUser = username;
+                document.querySelector('.login-container').style.display = 'none';
+                document.getElementById('noticeBoard').style.display = 'block';
+                const header = document.createElement('h1');
+                header.textContent = 'Streamshark Service Announcements';
+                header.style.color = 'navy';
+                header.style.fontSize = '2em';
+                header.style.textAlign = 'left';
+                header.style.margin = '20px';
+                header.style.position = 'absolute';
+                header.style.top = '0';
+                header.style.left = '0';
+                header.style.width = '100%';
+                header.style.background = 'white';
+                header.style.padding = '10px';
+                document.body.prepend(header);
+                fetchMessages();
+            } else {
+                document.getElementById('loginError').innerText = "Invalid username or password!";
+            }
+        }
+
+        function togglePassword() {
+            let passwordField = document.getElementById('password');
+            passwordField.type = passwordField.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>
